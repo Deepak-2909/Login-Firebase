@@ -9,8 +9,13 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var viewModel: AppViewModel
     
+    @State private var email: String = ""
+    @State private var password: String = ""
+    
+    
+    @State var showLoginView = false
     
     var body: some View {
         NavigationView {
@@ -18,23 +23,46 @@ struct LoginView: View {
                 LinearGradient(gradient: Gradient(colors: [Color.yellow, Color.pink, Color.white, Color.orange]), startPoint: .topLeading, endPoint: .bottomTrailing)
                     .edgesIgnoringSafeArea(.all)
                 
-                VStack {
-                    Text("hello")
-                }
+                VStack{
+                    
+                    
+                    TextField("Enter your email id", text: $email)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                    
+                    SecureField("Enter your password", text: $password)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .padding()
+                    
+                    
+                        NavigationLink(
+                            destination: ProfileView(),
+                            label: {
+                                Text("Sign In")
+                                    .foregroundColor(.white)
+                                    .font(.title)
+                                    .padding()
+                                    .background(Color.accentColor)
+                                    .cornerRadius(8.0)
+                                    .shadow(color: .black, radius: 8, x: -5, y: 5)
+                        })                }
             }
-            .navigationBarTitle(Text("Login"))
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button(action: {
-                presentationMode.wrappedValue.dismiss()
-            }, label: {
-                Image(systemName: "x.circle")
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .foregroundColor(.accentColor)
-            })
-            )
+            .toolbar{
+                ToolbarItem(placement: .principal){
+                    Text("LOGIN")
+                        .bold()
+                }
+            }        }
+        .onAppear{
+            viewModel.signedIn = viewModel.isSignedIn
         }
     }
+    
 }
 
 struct TabView_Previews: PreviewProvider {

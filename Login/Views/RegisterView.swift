@@ -32,67 +32,77 @@ struct RegisterView: View {
                 VStack{
                     
                     
-                    // Spacer()
-                    
                     TextField("Enter your email id", text: $email)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
                     
                     SecureField("Enter your password", text: $password)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
                     
                     TextField("Enter your name", text: $name)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
                     
-                    Text("Select your gender")
-                    
-                    Picker("Select your gender", selection: $selectedGenderIndex) {
-                        ForEach(0..<gender.count) {
-                            Text(self.gender[$0])
-                        }
+                    HStack{
+                        Text("Select your gender")
+                        
+                        Picker("Select your gender", selection: $selectedGenderIndex) {
+                            ForEach(0..<gender.count) {
+                                Text(self.gender[$0])
+                            }
+                        }.pickerStyle(SegmentedPickerStyle())
                     }
+                    .padding(.horizontal)
                     
                     
-                    DatePicker("Date of birth", selection: $selectedDate, displayedComponents: .date)
+                    DatePicker("Select your date of birth", selection: $selectedDate, displayedComponents: .date)
                         .padding()
                     
                     TextField("Enter your city", text: $city)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .padding()
                     
-//                    NavigationLink(
-//                        destination: ProfileView(),
-//                        label: {
-//                            Text("Register me")
-//                                .foregroundColor(.white)
-//                                .font(.title)
-//                                .padding()
-//                                .background(Color.accentColor)
-//                                .cornerRadius(8.0)
-//                                .shadow(color: .black, radius: 8, x: -5, y: 5)
-//                        })
-                    Button {
+                    HStack {
                         
-                        guard !email.isEmpty, !password.isEmpty, !name.isEmpty, !city.isEmpty else {
-                            return
+                        Button {
+
+                            guard !email.isEmpty, !password.isEmpty, !name.isEmpty, !city.isEmpty else {
+                                return
+                            }
+                            viewModel.signUp(email: email, password: password, name: name, selectedGenderIndex: selectedGenderIndex, selectedDate: selectedDate, city: city)
+                        } label: {
+                            Text("Register me")
+                                .foregroundColor(.white)
+                                .font(.title)
+                                .padding()
+                                .background(Color.accentColor)
+                                .cornerRadius(8.0)
+                                .shadow(color: .black, radius: 8, x: -5, y: 5)
                         }
-                        viewModel.signIn(email: email, password: password)
-                    } label: {
-                        Text("Register me")
-                            .foregroundColor(.white)
-                            .font(.title)
-                            .padding()
-                            .background(Color.accentColor)
-                            .cornerRadius(8.0)
-                            .shadow(color: .black, radius: 8, x: -5, y: 5)
+                        
+                        NavigationLink(
+                            destination: ProfileView(),
+                            label: {
+                                Text("Sign Up")
+                                    .foregroundColor(.white)
+                                    .font(.title)
+                                    .padding()
+                                    .background(Color.accentColor)
+                                    .cornerRadius(8.0)
+                                    .shadow(color: .black, radius: 8, x: -5, y: 5)
+                        })
                     }
-                    if viewModel.isSignedIn {
-                        ProfileView()
-                    } else {
-                        RegisterView()
-                    }
+                    
+                    
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -116,7 +126,11 @@ struct RegisterView: View {
                                     })
             )
         }
+        .onAppear{
+            viewModel.signedIn = viewModel.isSignedIn
+        }
     }
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
