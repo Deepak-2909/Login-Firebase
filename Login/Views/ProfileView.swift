@@ -8,8 +8,23 @@
 import SwiftUI
 
 struct ProfileView: View {
+    
+    @EnvironmentObject var viewModel: AppViewModel
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [Color.yellow, Color.pink, Color.white, Color.orange]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                .edgesIgnoringSafeArea(.all)
+            VStack{
+                Text("Signed In!")
+                Button(action: {
+                    viewModel.signOut()
+                },
+                       label: {
+                    Text("Sign Out")
+                })
+            }
+        }
     }
 }
 
